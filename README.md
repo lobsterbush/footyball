@@ -27,16 +27,32 @@ pretend the gap isn't there.
 
 ## Requirements
 
-- Go 1.21+
 - A terminal with 256-color or true-color support for the best look
+- Go 1.21+, only if you're building from source rather than using Homebrew
 
 ## Install
+
+```bash
+brew tap lobsterbush/footyball
+brew install footyball
+```
+
+Homebrew gates third-party taps, so it'll ask you to run
+`brew trust lobsterbush/footyball` the first time.
+
+To upgrade later:
+
+```bash
+brew update && brew upgrade footyball
+```
+
+Or build it yourself:
 
 ```bash
 go build -o footyball .
 ```
 
-or run directly during development:
+Or run it straight from source during development:
 
 ```bash
 go run .
