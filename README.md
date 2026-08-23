@@ -1,5 +1,7 @@
 # footyball
 
+![footyball dashboard, showing AFL, NRL, A-League, and Super Rugby Pacific scores in the Reef dark theme](docs/screenshot.png)
+
 I found [sportsball](https://codex.humdrum.me/r/sportsball), a lovely little
 terminal dashboard for American sports, and Australia didn't have anything
 like it. So now it does.
@@ -108,3 +110,6 @@ go build ./...
 ## Authors
 
 Charles Crabtree
+
+Built with Claude Code, AI-driven and human-verified: I reviewed, ran, and
+tested it myself before shipping.
