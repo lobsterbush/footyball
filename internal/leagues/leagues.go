@@ -31,11 +31,27 @@ var All = []League{
 	},
 	{
 		Key:        "aleague",
-		Name:       "A-LEAGUE",
+		Name:       "A-LEAGUE M",
 		FullName:   "A-League Men",
 		SportSlug:  "soccer",
 		LeagueSlug: "aus.1",
 		Mark:       "AL",
+	},
+	{
+		Key:        "aleaguew",
+		Name:       "A-LEAGUE W",
+		FullName:   "A-League Women",
+		SportSlug:  "soccer",
+		LeagueSlug: "aus.w.1",
+		Mark:       "AW",
+	},
+	{
+		Key:        "nbl",
+		Name:       "NBL",
+		FullName:   "National Basketball League",
+		SportSlug:  "basketball",
+		LeagueSlug: "nbl",
+		Mark:       "NB",
 	},
 	{
 		Key:        "srp",

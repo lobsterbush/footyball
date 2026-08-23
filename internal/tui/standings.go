@@ -95,14 +95,16 @@ func (m Model) viewStandingsBody() string {
 		if len(m.standingsGroups) > 1 {
 			lines = append(lines, st.Gold.Bold(true).Render(g.Name))
 		}
-		lines = append(lines, st.Muted.Render(fmt.Sprintf("%-3s %-24s %3s %3s %3s %3s %5s %6s", "#", "TEAM", "GP", "W", "D", "L", "PTS", "DIFF")))
+
+		cols := activeStandingsColumns(g.Entries)
+
+		headerRow := fmt.Sprintf("%-3s %-24s", "#", "TEAM")
+		for _, c := range cols {
+			headerRow += " " + padLeft(c.header, c.width)
+		}
+		lines = append(lines, st.Muted.Render(headerRow))
+
 		for _, e := range g.Entries {
-			gp, _ := e.Stat("gamesPlayed")
-			w, _ := e.Stat("gamesWon", "wins")
-			d, _ := e.Stat("gamesDrawn", "ties")
-			ls, _ := e.Stat("gamesLost", "losses")
-			pts, _ := e.Stat("points")
-			diff, _ := e.Stat("pointsDifference", "pointDifferential", "differential")
 			rank, _ := e.Stat("rank", "playoffSeed")
 
 			star := ""
@@ -111,8 +113,11 @@ func (m Model) viewStandingsBody() string {
 			}
 			name := star + e.Team.DisplayName
 
-			row := fmt.Sprintf("%-3s %-24s %3s %3s %3s %3s %5s %6s",
-				rank, truncate(name, 24), gp, w, d, ls, pts, diff)
+			row := fmt.Sprintf("%-3s %-24s", rank, truncate(name, 24))
+			for _, c := range cols {
+				v, _ := e.Stat(c.candidates...)
+				row += " " + padLeft(v, c.width)
+			}
 
 			style := st.Text
 			if cursor == m.standingsCursor {
@@ -128,4 +133,37 @@ func (m Model) viewStandingsBody() string {
 	}
 
 	return strings.Join(lines, "\n")
+}
+
+type standingsColumn struct {
+	header     string
+	width      int
+	candidates []string
+}
+
+var standingsColumnSpecs = []standingsColumn{
+	{"GP", 3, []string{"gamesPlayed"}},
+	{"W", 3, []string{"gamesWon", "wins"}},
+	{"D", 3, []string{"gamesDrawn", "ties"}},
+	{"L", 3, []string{"gamesLost", "losses"}},
+	{"PCT", 5, []string{"winPercent"}},
+	{"PTS", 5, []string{"points"}},
+	{"DIFF", 6, []string{"pointsDifference", "pointDifferential", "differential"}},
+}
+
+// activeStandingsColumns picks only the columns this league's entries
+// actually populate — ESPN uses different stat sets per sport (e.g.
+// basketball has no draws and no ladder "points", so it falls back to W/L
+// win percentage instead).
+func activeStandingsColumns(entries []api.StandingsEntry) []standingsColumn {
+	if len(entries) == 0 {
+		return nil
+	}
+	var cols []standingsColumn
+	for _, c := range standingsColumnSpecs {
+		if _, ok := entries[0].Stat(c.candidates...); ok {
+			cols = append(cols, c)
+		}
+	}
+	return cols
 }

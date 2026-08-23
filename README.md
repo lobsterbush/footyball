@@ -1,8 +1,9 @@
 # footyball
 
-A terminal dashboard for Australian sport — AFL, NRL, A-League Men, and
-Super Rugby Pacific, live in your terminal. Built with [Bubble Tea](https://github.com/charmbracelet/bubbletea),
-in the spirit of [sportsball](https://codex.humdrum.me/r/sportsball).
+A terminal dashboard for Australian sport — AFL, NRL, A-League (men's and
+women's), the NBL, and Super Rugby Pacific, live in your terminal. Built with
+[Bubble Tea](https://github.com/charmbracelet/bubbletea), in the spirit of
+[sportsball](https://codex.humdrum.me/r/sportsball).
 
 ## Overview
 
@@ -17,6 +18,8 @@ Leagues covered:
 - **AFL** — Australian Football League
 - **NRL** — National Rugby League
 - **A-League Men**
+- **A-League Women**
+- **NBL** — National Basketball League
 - **Super Rugby Pacific**
 
 Every so often, on the dashboard, a kangaroo or koala hops or ambles across
