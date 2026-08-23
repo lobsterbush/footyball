@@ -1,39 +1,29 @@
 # footyball
 
-A terminal dashboard for Australian sport — AFL, NRL, A-League (men's and
-women's), the NBL, and Super Rugby Pacific, live in your terminal. Built with
-[Bubble Tea](https://github.com/charmbracelet/bubbletea), in the spirit of
-[sportsball](https://codex.humdrum.me/r/sportsball).
+I found [sportsball](https://codex.humdrum.me/r/sportsball), a lovely little
+terminal dashboard for American sports, and Australia didn't have anything
+like it. So now it does.
 
-## Overview
+footyball is a live terminal dashboard for AFL, NRL, both A-Leagues, the NBL,
+and Super Rugby Pacific. It runs right in your terminal, no browser or
+account needed, and pulls scores straight from ESPN's public API. There are
+three color palettes drawn from the Australian landscape, Eucalypt, Ochre,
+and Reef, each in a light and dark variant, and it follows whatever your
+terminal is already doing, so cycling themes only ever shows you variants
+that actually fit.
 
-footyball pulls live scores, box scores, scoring plays, standings, and team
-schedules from ESPN's public scoreboard API — no API key required. It ships
-with three Australian-landscape color palettes (Eucalypt, Ochre, Reef), each
-in a light and dark variant, and follows your terminal's own background so
-`t` only cycles through variants that actually fit.
+Star a team and footyball rings the terminal bell the moment their game goes
+live, so you can leave it running in a background pane instead of checking
+it yourself. Open any game for the full detail view: box score, scoring
+plays, and, when ESPN has it, who's leading the game for each side.
 
-Leagues covered:
+Every so often a kangaroo or koala wanders across the bottom of the
+dashboard. It doesn't do anything. I like it anyway.
 
-- **AFL** — Australian Football League
-- **NRL** — National Rugby League
-- **A-League Men**
-- **A-League Women**
-- **NBL** — National Basketball League
-- **Super Rugby Pacific**
-
-Detail view surfaces each game's top performer per side (leading goalkicker,
-scorer, etc.) when ESPN provides it, above the box score. And if you've
-starred a team, footyball rings the terminal bell the moment their game goes
-live — no polling required, just leave it running in a background pane.
-
-Every so often, on the dashboard, a kangaroo or koala hops or ambles across
-the bottom of the screen — purely decorative, no key required.
-
-Cricket (Big Bash, internationals) isn't covered — ESPN's cricket API is
-structured around innings and overs rather than the quarter/half scoreboard
-shape the other four leagues share, and folding it in cleanly would need its
-own detail view.
+Cricket isn't in here yet. ESPN structures cricket around innings and overs
+rather than quarters, so it needs its own detail view, not just another
+league entry. That's something for later, and I'd rather say so than
+pretend the gap isn't there.
 
 ## Requirements
 
@@ -80,13 +70,13 @@ footyball --version  # print version
 
 `ctrl+c` quits immediately from any view, not just the dashboard.
 
-**Detail view** — ↑/↓ scroll · f/F favorite · g/G schedule · esc/h back
+**Detail view:** ↑/↓ scroll · f/F favorite · g/G schedule · esc/h back
 
-**Standings** (`s`) — ↑/↓ move · tab/shift+tab switch league · enter team schedule · f favorite · esc/s back
+**Standings** (`s`): ↑/↓ move · tab/shift+tab switch league · enter team schedule · f favorite · esc/s back
 
-**Team schedule** — ↑/↓ scroll · f favorite · esc/h back
+**Team schedule:** ↑/↓ scroll · f favorite · esc/h back
 
-**League settings** (`L`) — ↑/↓ move · space show/hide · K/J reorder · 0 reset · esc done
+**League settings** (`L`): ↑/↓ move · space show/hide · K/J reorder · 0 reset · esc done
 
 ## Data & config
 
