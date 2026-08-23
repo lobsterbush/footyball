@@ -18,12 +18,7 @@ it yourself. Open any game for the full detail view: box score, scoring
 plays, and, when ESPN has it, who's leading the game for each side.
 
 Every so often a kangaroo or koala wanders across the bottom of the
-dashboard. It doesn't do anything. I like it anyway.
-
-Cricket isn't in here yet. ESPN structures cricket around innings and overs
-rather than quarters, so it needs its own detail view, not just another
-league entry. That's something for later, and I'd rather say so than
-pretend the gap isn't there.
+dashboard.
 
 ## Requirements
 
