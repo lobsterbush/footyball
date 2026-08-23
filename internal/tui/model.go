@@ -96,6 +96,12 @@ type Model struct {
 	settingsCursor int
 
 	status string // transient footer message (e.g. "refreshed")
+
+	// wildlife: a kangaroo or koala occasionally crosses the dashboard
+	critterActive bool
+	critterKind   critterKind
+	critterX      int
+	critterFrame  int
 }
 
 // New builds the initial model from loaded (or default) config. termDark
@@ -119,7 +125,7 @@ func New(cfg *config.Config, termDark bool) Model {
 
 // Init kicks off the first data fetch and the pulse/refresh timers.
 func (m Model) Init() tea.Cmd {
-	cmds := []tea.Cmd{pulseCmd(), refreshCmd()}
+	cmds := []tea.Cmd{pulseCmd(), refreshCmd(), critterSpawnCmd()}
 	cmds = append(cmds, fetchAllCmd(m.leagueList)...)
 	return tea.Batch(cmds...)
 }

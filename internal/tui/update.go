@@ -73,6 +73,25 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case statusClearMsg:
 		m.status = ""
 		return m, nil
+
+	case critterSpawnMsg:
+		if m.critterActive {
+			return m, critterSpawnCmd()
+		}
+		m = m.startCritter()
+		return m, critterMoveCmd()
+
+	case critterTickMsg:
+		if !m.critterActive {
+			return m, nil
+		}
+		m.critterX += critterStep[m.critterKind]
+		m.critterFrame = 1 - m.critterFrame
+		if m.critterX > m.width+critterWidth {
+			m.critterActive = false
+			return m, critterSpawnCmd()
+		}
+		return m, critterMoveCmd()
 	}
 
 	return m, nil

@@ -19,6 +19,9 @@ Leagues covered:
 - **A-League Men**
 - **Super Rugby Pacific**
 
+Every so often, on the dashboard, a kangaroo or koala hops or ambles across
+the bottom of the screen — purely decorative, no key required.
+
 Cricket (Big Bash, internationals) isn't covered — ESPN's cricket API is
 structured around innings and overs rather than the quarter/half scoreboard
 shape the other four leagues share, and folding it in cleanly would need its

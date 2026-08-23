@@ -38,11 +38,13 @@ func (m Model) View() string {
 
 	footer := m.viewFooter(st, width)
 
-	frame := lipgloss.JoinVertical(lipgloss.Left,
-		header,
-		lipgloss.NewStyle().Padding(1, 2).Render(body),
-		footer,
-	)
+	sections := []string{header, lipgloss.NewStyle().Padding(1, 2).Render(body)}
+	if critter := m.viewCritter(); critter != "" {
+		sections = append(sections, critter)
+	}
+	sections = append(sections, footer)
+
+	frame := lipgloss.JoinVertical(lipgloss.Left, sections...)
 	return st.App.Width(width).Render(frame)
 }
 
