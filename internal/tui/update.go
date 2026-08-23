@@ -26,9 +26,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 		delete(m.sbErr, msg.key)
+		newlyLive := m.newlyLiveFavorites(msg.key, m.scoreboards[msg.key], msg.resp)
 		m.scoreboards[msg.key] = msg.resp
 		if _, ok := m.cursor[msg.key]; !ok {
 			m.cursor[msg.key] = 0
+		}
+		if len(newlyLive) > 0 {
+			m.bellPending = true
+			cmds := []tea.Cmd{m.setStatus(newlyLive[0]), func() tea.Msg { return bellRungMsg{} }}
+			return m, tea.Batch(cmds...)
 		}
 		return m, nil
 
@@ -72,6 +78,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case statusClearMsg:
 		m.status = ""
+		return m, nil
+
+	case bellRungMsg:
+		m.bellPending = false
 		return m, nil
 
 	case critterSpawnMsg:

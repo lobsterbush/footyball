@@ -240,8 +240,46 @@ type PlayClock struct {
 
 // Summary is the top-level shape of the /summary endpoint.
 type Summary struct {
-	Boxscore Boxscore `json:"boxscore"`
-	Plays    []Play   `json:"plays"`
+	Boxscore Boxscore      `json:"boxscore"`
+	Plays    []Play        `json:"plays"`
+	Leaders  []TeamLeaders `json:"leaders"`
+}
+
+// LeaderAthlete is the player behind one leaderboard entry.
+type LeaderAthlete struct {
+	ShortName string `json:"shortName"`
+}
+
+// LeaderEntry is one player's value within a leader category.
+type LeaderEntry struct {
+	DisplayValue string        `json:"displayValue"`
+	Athlete      LeaderAthlete `json:"athlete"`
+}
+
+// LeaderCategory is one statistical category (e.g. "Goals", "Tries"),
+// ranked by player.
+type LeaderCategory struct {
+	Name        string        `json:"name"`
+	DisplayName string        `json:"displayName"`
+	Leaders     []LeaderEntry `json:"leaders"`
+}
+
+// TeamLeaders holds one team's top performers, not available for every
+// sport/game — ESPN populates it for AFL and the NBL but not consistently
+// for rugby or soccer.
+type TeamLeaders struct {
+	Team    Team             `json:"team"`
+	Leaders []LeaderCategory `json:"leaders"`
+}
+
+// TopPerformer returns the single headline stat leader for this team, if any.
+func (t TeamLeaders) TopPerformer() (category string, player string, value string, ok bool) {
+	if len(t.Leaders) == 0 || len(t.Leaders[0].Leaders) == 0 {
+		return "", "", "", false
+	}
+	cat := t.Leaders[0]
+	top := cat.Leaders[0]
+	return cat.DisplayName, top.Athlete.ShortName, top.DisplayValue, true
 }
 
 // StandingsStat is one labelled statistic for a standings entry.

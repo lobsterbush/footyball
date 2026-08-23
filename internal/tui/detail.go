@@ -74,6 +74,33 @@ func scoringPlays(plays []api.Play) []api.Play {
 	return out
 }
 
+// topPerformersLine renders each side's headline stat leader (top goal
+// scorer, top scorer, etc.) as a single line. Not every sport/game has
+// this data, so it's a graceful no-op when absent.
+func topPerformersLine(leaders []api.TeamLeaders, away, home api.Competitor, st styleSet) (string, bool) {
+	find := func(teamID string) (cat, player, value string, ok bool) {
+		for _, t := range leaders {
+			if t.Team.ID == teamID {
+				return t.TopPerformer()
+			}
+		}
+		return "", "", "", false
+	}
+	aCat, aPlayer, aValue, aOK := find(away.Team.ID)
+	hCat, hPlayer, hValue, hOK := find(home.Team.ID)
+	if !aOK && !hOK {
+		return "", false
+	}
+	parts := []string{st.Gold.Bold(true).Render("TOP PERFORMERS")}
+	if aOK {
+		parts = append(parts, st.Text.Render(fmt.Sprintf("  %-4s %s — %s %s", away.Team.Abbreviation, aPlayer, aValue, aCat)))
+	}
+	if hOK {
+		parts = append(parts, st.Text.Render(fmt.Sprintf("  %-4s %s — %s %s", home.Team.Abbreviation, hPlayer, hValue, hCat)))
+	}
+	return strings.Join(parts, "\n"), true
+}
+
 func findBoxTeam(bx api.Boxscore, teamID string) (api.BoxTeam, bool) {
 	for _, t := range bx.Teams {
 		if t.Team.ID == teamID {
@@ -130,6 +157,11 @@ func (m Model) viewDetailBody() string {
 	if m.summary == nil {
 		lines = append(lines, st.Muted.Render("No detail available."))
 		return strings.Join(lines, "\n")
+	}
+
+	// Top performers, one line per side, when ESPN provides them.
+	if topLine, ok := topPerformersLine(m.summary.Leaders, away, home, st); ok {
+		lines = append(lines, topLine, "")
 	}
 
 	// Box score comparison bars.

@@ -22,6 +22,11 @@ Leagues covered:
 - **NBL** — National Basketball League
 - **Super Rugby Pacific**
 
+Detail view surfaces each game's top performer per side (leading goalkicker,
+scorer, etc.) when ESPN provides it, above the box score. And if you've
+starred a team, footyball rings the terminal bell the moment their game goes
+live — no polling required, just leave it running in a background pane.
+
 Every so often, on the dashboard, a kangaroo or koala hops or ambles across
 the bottom of the screen — purely decorative, no key required.
 

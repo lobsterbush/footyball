@@ -33,3 +33,5 @@ type pulseMsg time.Time
 type refreshMsg time.Time
 
 type statusClearMsg struct{}
+
+type bellRungMsg struct{}

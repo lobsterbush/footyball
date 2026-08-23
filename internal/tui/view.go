@@ -45,7 +45,11 @@ func (m Model) View() string {
 	sections = append(sections, footer)
 
 	frame := lipgloss.JoinVertical(lipgloss.Left, sections...)
-	return st.App.Width(width).Render(frame)
+	out := st.App.Width(width).Render(frame)
+	if m.bellPending {
+		out = "\a" + out
+	}
+	return out
 }
 
 func (m Model) viewHeader(st styleSet, width int) string {

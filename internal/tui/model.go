@@ -95,7 +95,8 @@ type Model struct {
 	// league settings state
 	settingsCursor int
 
-	status string // transient footer message (e.g. "refreshed")
+	status      string // transient footer message (e.g. "refreshed")
+	bellPending bool   // rings the terminal bell once, on the next render
 
 	// wildlife: a kangaroo or koala occasionally crosses the dashboard
 	critterActive bool
