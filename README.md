@@ -71,7 +71,9 @@ footyball --version  # print version
 | L | league settings (show / hide / reorder) |
 | r | refresh now |
 | t | cycle theme |
-| q (ctrl+c) | quit |
+| q | quit |
+
+`ctrl+c` quits immediately from any view, not just the dashboard.
 
 **Detail view** — ↑/↓ scroll · f/F favorite · g/G schedule · esc/h back
 

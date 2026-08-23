@@ -100,9 +100,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m Model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	key := msg.String()
 
-	// Global keys, available from every view.
+	// Global keys, available from every view. ctrl+c always quits
+	// immediately, matching the universal terminal expectation; q is a
+	// dashboard-only shortcut for it since every other view already binds
+	// esc/h to "back".
 	switch key {
-	case "ctrl+c", "q":
+	case "ctrl+c":
+		m.quitting = true
+		return m, tea.Quit
+	case "q":
 		if m.view == viewDashboard {
 			m.quitting = true
 			return m, tea.Quit
