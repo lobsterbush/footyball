@@ -105,7 +105,11 @@ func (m Model) viewDetailBody() string {
 
 	title := fmt.Sprintf("%s  vs  %s", away.Team.DisplayName, home.Team.DisplayName)
 	lines = append(lines, st.LeagueName.Render(title))
-	lines = append(lines, st.Muted.Render(m.detailLeague.FullName+" · "+comp.Venue.FullName))
+	subtitle := m.detailLeague.FullName
+	if comp.Venue.FullName != "" {
+		subtitle += " · " + comp.Venue.FullName
+	}
+	lines = append(lines, st.Muted.Render(subtitle))
 	lines = append(lines, "")
 
 	scoreLine := fmt.Sprintf("%-24s %3s", truncate(away.Team.DisplayName, 24), away.Score)
@@ -131,11 +135,16 @@ func (m Model) viewDetailBody() string {
 	// Box score comparison bars.
 	awayBox, hasAway := findBoxTeam(m.summary.Boxscore, away.Team.ID)
 	homeBox, hasHome := findBoxTeam(m.summary.Boxscore, home.Team.ID)
-	if hasAway && hasHome && len(awayBox.Statistics) > 0 {
+	awayStats := api.FlattenBoxStats(awayBox.Statistics)
+	homeStats := api.FlattenBoxStats(homeBox.Statistics)
+	if hasAway && hasHome && len(awayStats) > 0 {
 		lines = append(lines, st.Gold.Bold(true).Render("TEAM STATS"))
 		lines = append(lines, st.Muted.Render(padLeft(truncate(away.Team.Abbreviation, 4), 4)+strings.Repeat(" ", 22)+truncate(home.Team.Abbreviation, 4)))
-		for _, as := range awayBox.Statistics {
-			hs, found := statByName(homeBox.Statistics, as.Name)
+		for _, as := range awayStats {
+			if as.Label == "" {
+				continue
+			}
+			hs, found := statByName(homeStats, as.Name)
 			if !found {
 				continue
 			}

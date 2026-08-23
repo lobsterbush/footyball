@@ -32,6 +32,18 @@ func (m Model) selectedEvent() (leagues.League, api.Event, bool) {
 	return l, events[idx], true
 }
 
+// indexOfEvent finds an event by ID in a (possibly just re-sorted) list,
+// so the cursor can keep following the same game across a favorite toggle
+// instead of drifting onto whatever ends up at the old index.
+func indexOfEvent(events []api.Event, id string) int {
+	for i, e := range events {
+		if e.ID == id {
+			return i
+		}
+	}
+	return 0
+}
+
 func (m *Model) resetCursors() {
 	for k := range m.cursor {
 		m.cursor[k] = 0
@@ -103,6 +115,7 @@ func (m Model) updateDashboard(key string) (tea.Model, tea.Cmd) {
 				if !m.cfg.IsFavorite(l.Key, team.Team.ID) {
 					verb = "Unfavorited"
 				}
+				m.cursor[l.Key] = indexOfEvent(m.leagueEvents(l), ev.ID)
 				cmd := m.setStatus(fmt.Sprintf("%s %s", verb, team.Team.DisplayName))
 				return m, cmd
 			}

@@ -169,12 +169,36 @@ type ScheduleResponse struct {
 	Events []Event `json:"events"`
 }
 
-// BoxTeamStat is one labelled statistic for a team in a box score.
+// BoxTeamStat is one labelled statistic for a team in a box score. ESPN
+// uses two different shapes here depending on sport: AFL returns a flat
+// list of stats directly; most other sports (rugby, soccer, basketball)
+// group them into named categories, each carrying its own nested "stats"
+// list and using "displayName" instead of "label" for the readable name.
+// Flatten (see FlattenBoxStats) before rendering to handle either shape.
 type BoxTeamStat struct {
-	Name         string `json:"name"`
-	Label        string `json:"label"`
-	Abbreviation string `json:"abbreviation"`
-	DisplayValue string `json:"displayValue"`
+	Name         string        `json:"name"`
+	Label        string        `json:"label"`
+	DisplayName  string        `json:"displayName"`
+	Abbreviation string        `json:"abbreviation"`
+	DisplayValue string        `json:"displayValue"`
+	Stats        []BoxTeamStat `json:"stats"`
+}
+
+// FlattenBoxStats resolves either box-score shape into one flat,
+// consistently-labelled list of leaf stats.
+func FlattenBoxStats(stats []BoxTeamStat) []BoxTeamStat {
+	var out []BoxTeamStat
+	for _, s := range stats {
+		if len(s.Stats) > 0 {
+			out = append(out, FlattenBoxStats(s.Stats)...)
+			continue
+		}
+		if s.Label == "" {
+			s.Label = s.DisplayName
+		}
+		out = append(out, s)
+	}
+	return out
 }
 
 // BoxTeam is one team's row in a box score.
