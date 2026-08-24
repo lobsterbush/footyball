@@ -36,3 +36,24 @@ three Australian-landscape color palettes (Eucalypt, Ochre, Reef).
   by the custom `api.Time` unmarshaler.
 - Standings entries are not guaranteed to arrive in ladder order; they're
   sorted by the `rank` (or `playoffSeed`) stat client-side.
+- Test coverage: every package now has unit tests for its pure logic
+  (`internal/api`, `internal/config`, `internal/leagues`, `internal/theme`,
+  `internal/tui`). The `tui` package tests favor Model literals built
+  directly with the fields under test (see `filter_test.go`,
+  `standings_test.go`, `detail_test.go`) rather than driving the full Bubble
+  Tea update loop, matching `notify_test.go`'s existing style. Nothing in
+  `internal/api`'s HTTP fetch functions is tested (they're thin wrappers
+  around `get`); the pure parsing/sorting logic they call
+  (`FlattenBoxStats`, `sortByRank`/`rankOf`) is covered instead.
+- To test the critter easter egg (`internal/tui/critter.go`) quickly,
+  temporarily lower `randomCritterDelay`'s range (e.g. to 2 to 4 seconds),
+  rebuild, and watch a tmux session — it spawns a kangaroo or koala roughly
+  every cycle and it's easy to tell them apart (kangaroo hops in 2-column
+  steps, koala ambles in 1-column steps). Restore the original 45 to 120
+  second range before committing.
+- Manually re-verified (Aug 2026) against a live run: ctrl+c quits from all
+  five views, 70-column terminals (both a fresh launch and a live resize)
+  render every view without overflow, box scores render correctly for
+  nested-category sports (NRL) as well as AFL's flat shape, and league
+  settings hide/show/reset all take effect on the dashboard immediately,
+  including a fresh fetch for a newly re-shown league.
