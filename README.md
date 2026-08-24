@@ -1,6 +1,6 @@
 # footyball
 
-![footyball dashboard, showing AFL, NRL, A-League, and Super Rugby Pacific scores in the Reef dark theme](docs/screenshot.png)
+![footyball demo: browsing the live AFL dashboard, opening a game's box score and scoring plays, checking the ladder, touring the other leagues, and cycling themes](demo/demo.gif)
 
 I found [sportsball](https://codex.humdrum.me/r/sportsball), a lovely little
 terminal dashboard for American sports, and Australia didn't have anything
@@ -105,6 +105,14 @@ Everything here is original Go source; there's nothing to regenerate beyond
 ```bash
 go vet ./...
 go build ./...
+```
+
+The demo GIF at the top is recorded with [VHS](https://github.com/charmbracelet/vhs)
+against a real binary and live data, not staged. To regenerate it:
+
+```bash
+go build -o /tmp/footyball_demo_bin .
+XDG_CONFIG_HOME=/tmp/footyball-demo-config vhs demo/demo.tape
 ```
 
 ## Authors
