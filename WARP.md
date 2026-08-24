@@ -47,7 +47,7 @@ three Australian-landscape color palettes (Eucalypt, Ochre, Reef).
   (`FlattenBoxStats`, `sortByRank`/`rankOf`) is covered instead.
 - To test the critter easter egg (`internal/tui/critter.go`) quickly,
   temporarily lower `randomCritterDelay`'s range (e.g. to 2 to 4 seconds),
-  rebuild, and watch a tmux session — it spawns a kangaroo or koala roughly
+  rebuild, and watch a tmux session: it spawns a kangaroo or koala roughly
   every cycle and it's easy to tell them apart (kangaroo hops in 2-column
   steps, koala ambles in 1-column steps). Restore the original 45 to 120
   second range before committing.
