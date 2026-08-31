@@ -74,6 +74,37 @@ func scoringPlays(plays []api.Play) []api.Play {
 	return out
 }
 
+// scoringKeyEvents filters a keyEvents feed down to non-shootout goals,
+// pairing each with a running score computed by tallying one goal per team
+// as they occur, since soccer's key-events feed carries no score field of
+// its own, unlike the "plays" feed's awayScore/homeScore. Used as a
+// fallback for sports (currently A-League Men/Women) whose /summary
+// responses populate "keyEvents" instead of "plays".
+func scoringKeyEvents(events []api.KeyEvent, awayTeamID, homeTeamID string) []api.Play {
+	var out []api.Play
+	awayScore, homeScore := 0, 0
+	for _, e := range events {
+		if e.Shootout || !e.ScoringPlay || e.Type.Text != "Goal" {
+			continue
+		}
+		switch e.Team.ID {
+		case awayTeamID:
+			awayScore++
+		case homeTeamID:
+			homeScore++
+		}
+		out = append(out, api.Play{
+			Text:      e.Text,
+			AwayScore: awayScore,
+			HomeScore: homeScore,
+			Period:    e.Period,
+			Clock:     e.Clock,
+			Team:      e.Team,
+		})
+	}
+	return out
+}
+
 // topPerformersLine renders each side's headline stat leader (top goal
 // scorer, top scorer, etc.) as a single line. Not every sport/game has
 // this data, so it's a graceful no-op when absent.
@@ -203,8 +234,14 @@ func (m Model) viewDetailBody() string {
 		lines = append(lines, "")
 	}
 
-	// Scoring plays.
+	// Scoring plays. AFL/NRL/rugby populate "plays" with a running score;
+	// A-League soccer instead populates "keyEvents" with individual goal
+	// events and no score field, so fall back to tallying those when
+	// "plays" is empty.
 	plays := scoringPlays(m.summary.Plays)
+	if len(plays) == 0 {
+		plays = scoringKeyEvents(m.summary.KeyEvents, away.Team.ID, home.Team.ID)
+	}
 	if len(plays) > 0 {
 		lines = append(lines, st.Gold.Bold(true).Render("SCORING PLAYS"))
 		start := m.detailScroll

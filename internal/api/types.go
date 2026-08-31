@@ -240,9 +240,32 @@ type PlayClock struct {
 
 // Summary is the top-level shape of the /summary endpoint.
 type Summary struct {
-	Boxscore Boxscore      `json:"boxscore"`
-	Plays    []Play        `json:"plays"`
-	Leaders  []TeamLeaders `json:"leaders"`
+	Boxscore  Boxscore      `json:"boxscore"`
+	Plays     []Play        `json:"plays"`
+	KeyEvents []KeyEvent    `json:"keyEvents"`
+	Leaders   []TeamLeaders `json:"leaders"`
+}
+
+// KeyEventType names the kind of a KeyEvent (e.g. "Goal", "Substitution",
+// "Yellow Card", "Red Card").
+type KeyEventType struct {
+	Text string `json:"text"`
+}
+
+// KeyEvent is one entry in a match's key-events feed. ESPN populates this
+// for soccer (A-League Men/Women) instead of the "plays" field used by AFL,
+// NRL, and rugby: it carries no running score, only individual event
+// metadata, so goals must be tallied by the caller rather than read off a
+// score field.
+type KeyEvent struct {
+	Text        string       `json:"text"`
+	ShortText   string       `json:"shortText"`
+	Type        KeyEventType `json:"type"`
+	ScoringPlay bool         `json:"scoringPlay"`
+	Shootout    bool         `json:"shootout"`
+	Period      PlayPeriod   `json:"period"`
+	Clock       PlayClock    `json:"clock"`
+	Team        PlayTeamRef  `json:"team"`
 }
 
 // LeaderAthlete is the player behind one leaderboard entry.

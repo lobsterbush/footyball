@@ -40,8 +40,8 @@ public API, styled with three Australian-landscape color palettes
   sorted by the `rank` (or `playoffSeed`) stat client-side.
 - Test coverage: every package now has unit tests for its pure logic
   (`internal/api`, `internal/config`, `internal/leagues`, `internal/theme`,
-  `internal/tui`). The `tui` package tests favor Model literals built
-  directly with the fields under test (see `filter_test.go`,
+  `internal/tui`, `internal/winprob`). The `tui` package tests favor Model
+  literals built directly with the fields under test (see `filter_test.go`,
   `standings_test.go`, `detail_test.go`) rather than driving the full Bubble
   Tea update loop, matching `notify_test.go`'s existing style. Nothing in
   `internal/api`'s HTTP fetch functions is tested (they're thin wrappers
