@@ -1,6 +1,6 @@
 // Command footyball is a terminal dashboard for Australian sport: AFL, NRL,
-// A-League Men, and Super Rugby Pacific, drawn live from ESPN's public
-// scoreboard API. No API key required.
+// A-League Men, A-League Women, NBL, and Super Rugby Pacific, drawn live
+// from ESPN's public scoreboard API. No API key required.
 package main
 
 import (

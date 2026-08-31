@@ -3,16 +3,18 @@
 **Status:** Active
 
 A terminal (Bubble Tea) dashboard for Australian sport — AFL, NRL, A-League
-Men, and Super Rugby Pacific — with live scores, box scores, scoring plays,
-standings, and team schedules pulled from ESPN's public API, styled with
-three Australian-landscape color palettes (Eucalypt, Ochre, Reef).
+Men, A-League Women, NBL, and Super Rugby Pacific — with live scores, box
+scores, scoring plays, standings, and team schedules pulled from ESPN's
+public API, styled with three Australian-landscape color palettes
+(Eucalypt, Ochre, Reef).
 
 **Authors:** Charles Crabtree
 
 ## Architecture
 
 - `main.go` — entry point, flag handling, program bootstrap.
-- `internal/leagues` — the fixed AFL/NRL/A-League/Super Rugby registry.
+- `internal/leagues` — the fixed AFL/NRL/A-League Men/A-League Women/NBL/
+  Super Rugby registry.
 - `internal/api` — ESPN site-API client (scoreboard, summary, standings,
   team schedule) and response types. Handles ESPN's inconsistent timestamp
   and score encodings across endpoints.
@@ -26,7 +28,7 @@ three Australian-landscape color palettes (Eucalypt, Ochre, Reef).
 
 - Cricket (Big Bash, internationals) is deliberately out of scope — ESPN's
   cricket API models innings/overs rather than quarters, which doesn't fit
-  the shared box-score/scoring-play rendering the other four leagues use.
+  the shared box-score/scoring-play rendering the other six leagues use.
   Adding it would mean a parallel detail view, not just another league entry.
 - ESPN's `/teams/{id}/schedule` endpoint returns `score` as an object
   (`{"displayValue": ...}`) while `/scoreboard` and `/summary` return it as a
@@ -57,3 +59,23 @@ three Australian-landscape color palettes (Eucalypt, Ochre, Reef).
   nested-category sports (NRL) as well as AFL's flat shape, and league
   settings hide/show/reset all take effect on the dashboard immediately,
   including a fresh fetch for a newly re-shown league.
+- Manually re-verified (Aug 2026), extending the pass above to the leagues
+  it hadn't specifically exercised: dashboard cards, detail view, standings,
+  and team schedule all checked live for A-League Women and the NBL, not
+  just AFL/NRL. NBL's ESPN summary endpoint has no team-level box score,
+  play-by-play, or leaders data at all for any sampled game (preseason,
+  in-progress, and a completed grand final all showed
+  `boxscoreSource: "none"`); the app already degrades gracefully by simply
+  omitting those sections rather than showing anything garbled, so no
+  code change was needed there. NBL's team schedule and standings, which do
+  have real data, render correctly, including a team name that overflows
+  the standings/schedule truncation width ("South East Melbourne Phoenix")
+  and one that lands exactly on it ("Western Sydney Wanderers", 25 chars).
+  Separately, confirmed that ESPN's soccer summary endpoint (both A-Leagues)
+  never populates `plays`, the field `Summary.Plays` reads; its scoring
+  events live under a differently-named `keyEvents` field the app doesn't
+  parse, so the SCORING PLAYS section never appears for A-League Men/Women
+  even when ESPN has goal-by-goal data for the match. This wasn't fixed in
+  this pass (would need new parsing plus a fallback rendering path, since
+  `keyEvents` entries carry no running score, only a `scoringPlay` flag) but
+  is flagged for a follow-up.

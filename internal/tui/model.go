@@ -1,6 +1,6 @@
 // Package tui is footyball's Bubble Tea application: a live dashboard for
-// Australian sport (AFL, NRL, A-League Men, Super Rugby Pacific) drawn from
-// ESPN's public scoreboard API.
+// Australian sport (AFL, NRL, A-League Men, A-League Women, NBL, Super Rugby
+// Pacific) drawn from ESPN's public scoreboard API.
 package tui
 
 import (
