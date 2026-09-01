@@ -172,7 +172,21 @@ func formatKickoff(t time.Time) string {
 	return t.Local().Format("Mon 3:04pm")
 }
 
-func statusLabel(s api.Status, pulseOn bool, st styleSet) string {
+// periodLabel is the short period-name prefix scoring plays and the
+// in-progress status fallback render (e.g. "Q3", "H2"). ESPN's period
+// number is sport-agnostic (just 1, 2, 3, ...), but what it means differs:
+// AFL and the NBL play quarters, while NRL, Super Rugby, and soccer play
+// halves.
+func periodLabel(sportSlug string) string {
+	switch sportSlug {
+	case "rugby-league", "rugby", "soccer":
+		return "H"
+	default:
+		return "Q"
+	}
+}
+
+func statusLabel(s api.Status, pulseOn bool, sportSlug string, st styleSet) string {
 	switch s.Type.State {
 	case "in":
 		dot := "●"
@@ -181,7 +195,7 @@ func statusLabel(s api.Status, pulseOn bool, st styleSet) string {
 		}
 		clock := s.DisplayClock
 		if clock == "" {
-			clock = fmt.Sprintf("Q%d", s.Period)
+			clock = fmt.Sprintf("%s%d", periodLabel(sportSlug), s.Period)
 		}
 		return st.Live.Render(dot + " LIVE " + clock)
 	case "post":
@@ -229,7 +243,7 @@ func (m Model) renderCard(l leagues.League, e api.Event, focused bool) string {
 		homeLine = st.Text.Render(homeLine)
 	}
 
-	status := statusLabel(comp.Status, m.pulseOn, st)
+	status := statusLabel(comp.Status, m.pulseOn, l.SportSlug, st)
 	if comp.Status.Type.State == "pre" {
 		status = st.Upcoming.Render(formatKickoff(e.Date.Time))
 	}

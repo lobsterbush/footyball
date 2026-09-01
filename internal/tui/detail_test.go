@@ -99,6 +99,26 @@ func TestScoringKeyEventsFiltersToGoals(t *testing.T) {
 	}
 }
 
+// TestScoringKeyEventsIncludesPenaltyGoals covers ESPN's distinct type text
+// for a penalty-kick goal ("Penalty - Scored" rather than "Goal"), confirmed
+// live against completed A-League matches. It carries scoringPlay:true like
+// a regular goal and must count toward the running score.
+func TestScoringKeyEventsIncludesPenaltyGoals(t *testing.T) {
+	const awayID, homeID = "away1", "home1"
+	events := []api.KeyEvent{
+		keyEvent("Penalty - Scored", homeID, true, false),
+		keyEvent("Goal", homeID, true, false),
+		keyEvent("Goal", homeID, true, false),
+	}
+	got := scoringKeyEvents(events, awayID, homeID)
+	if len(got) != 3 {
+		t.Fatalf("expected 3 goals including the penalty, got %d: %v", len(got), got)
+	}
+	if got[len(got)-1].HomeScore != 3 {
+		t.Errorf("final home score = %d, want 3 (penalty goal must count)", got[len(got)-1].HomeScore)
+	}
+}
+
 // TestScoringKeyEventsExcludesShootout covers a penalty shootout, whose
 // goals shouldn't count toward the normal-time running score even though
 // they carry scoringPlay:true and type.text == "Goal".

@@ -1,7 +1,6 @@
 package tui
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
@@ -108,8 +107,4 @@ func bar(pct float64, width int, fill, empty lipgloss.Style) string {
 		filled = width
 	}
 	return fill.Render(strings.Repeat("█", filled)) + empty.Render(strings.Repeat("░", width-filled))
-}
-
-func kickoffLabel(local string) string {
-	return fmt.Sprintf(" %s ", local)
 }

@@ -87,7 +87,7 @@ func (m Model) viewScheduleBody() string {
 		case "pre":
 			result = st.Upcoming.Render(formatKickoff(e.Date.Time))
 		case "in":
-			result = statusLabel(comp.Status, m.pulseOn, st)
+			result = statusLabel(comp.Status, m.pulseOn, m.scheduleLeague.SportSlug, st)
 		default:
 			outcome := "L"
 			style := st.Err

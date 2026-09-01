@@ -79,12 +79,16 @@ func scoringPlays(plays []api.Play) []api.Play {
 // as they occur, since soccer's key-events feed carries no score field of
 // its own, unlike the "plays" feed's awayScore/homeScore. Used as a
 // fallback for sports (currently A-League Men/Women) whose /summary
-// responses populate "keyEvents" instead of "plays".
+// responses populate "keyEvents" instead of "plays". Filtering is done
+// purely on ScoringPlay/Shootout rather than Type.Text: ESPN uses distinct
+// type text for regular goals ("Goal") and penalty goals ("Penalty -
+// Scored"), both carrying scoringPlay:true, so matching only "Goal" drops
+// penalty goals and understates every running score after them.
 func scoringKeyEvents(events []api.KeyEvent, awayTeamID, homeTeamID string) []api.Play {
 	var out []api.Play
 	awayScore, homeScore := 0, 0
 	for _, e := range events {
-		if e.Shootout || !e.ScoringPlay || e.Type.Text != "Goal" {
+		if e.Shootout || !e.ScoringPlay {
 			continue
 		}
 		switch e.Team.ID {
@@ -174,7 +178,7 @@ func (m Model) viewDetailBody() string {
 	lines = append(lines, st.Text.Render(scoreLine))
 	scoreLine = fmt.Sprintf("%-24s %3s", truncate(home.Team.DisplayName, 24), home.Score)
 	lines = append(lines, st.Text.Render(scoreLine))
-	lines = append(lines, statusLabel(comp.Status, m.pulseOn, st))
+	lines = append(lines, statusLabel(comp.Status, m.pulseOn, m.detailLeague.SportSlug, st))
 	lines = append(lines, "")
 
 	if m.summaryLoad {
@@ -262,8 +266,8 @@ func (m Model) viewDetailBody() string {
 			} else if p.Team.ID == home.Team.ID {
 				who = home.Team.Abbreviation
 			}
-			line := fmt.Sprintf("Q%d %5s  %-4s %-3d-%-3d  %s",
-				p.Period.Number, p.Clock.DisplayValue, who, p.AwayScore, p.HomeScore, truncate(p.Text, 40))
+			line := fmt.Sprintf("%s%d %5s  %-4s %-3d-%-3d  %s",
+				periodLabel(m.detailLeague.SportSlug), p.Period.Number, p.Clock.DisplayValue, who, p.AwayScore, p.HomeScore, truncate(p.Text, 40))
 			lines = append(lines, st.Text.Render(line))
 		}
 		if len(plays) > end || start > 0 {
