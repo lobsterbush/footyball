@@ -9,7 +9,7 @@ import (
 
 // Version is the single source of truth for footyball's version string,
 // shared with main.go's --version flag so the two can't drift apart.
-const Version = "v0.1.0"
+const Version = "v0.1.1"
 
 // View renders the full frame for the current model state.
 func (m Model) View() string {
