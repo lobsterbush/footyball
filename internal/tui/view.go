@@ -7,7 +7,9 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-const version = "v0.1.0"
+// Version is the single source of truth for footyball's version string,
+// shared with main.go's --version flag so the two can't drift apart.
+const Version = "v0.1.0"
 
 // View renders the full frame for the current model state.
 func (m Model) View() string {
@@ -55,7 +57,7 @@ func (m Model) View() string {
 func (m Model) viewHeader(st styleSet, width int) string {
 	cross := st.Gold.Render("✦ ✦ ✧ ✦")
 	brand := st.Brand.Render("footyball")
-	ver := st.Version.Render(" " + version + " ")
+	ver := st.Version.Render(" " + Version + " ")
 	left := cross + "  " + brand + ver
 
 	var right string

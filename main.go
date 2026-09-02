@@ -14,11 +14,9 @@ import (
 	"github.com/crabtree/footyball/internal/tui"
 )
 
-const version = "0.1.0"
-
 func main() {
 	if len(os.Args) > 1 && (os.Args[1] == "--version" || os.Args[1] == "-v") {
-		fmt.Println("footyball " + version)
+		fmt.Println("footyball " + tui.Version)
 		return
 	}
 
